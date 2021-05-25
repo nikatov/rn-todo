@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, View, TextInput, Alert, Keyboard } from 'react-native';
 import { THEME } from '../theme';
 
 import { AntDesign } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ export function AddTodo(props) {
         }
         props.onSubmit(value);
         setValue('')
+        Keyboard.dismiss();
     }
     return ( 
         <View style={styles.block}>
