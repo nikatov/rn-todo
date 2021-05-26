@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         padding: 15
     },
     button: {
-        // width: Dimensions.get('window').width * 0.4
+        // width: Dimensions.get('window').width * 0.4 // 40%
         width: Dimensions.get('window').width > 400 ? 150 : 100
     },
     title: {
