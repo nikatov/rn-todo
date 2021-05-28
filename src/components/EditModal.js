@@ -14,6 +14,11 @@ export const EditModal = ({visible, value, onClose, onSave}) => {
         }
     }
 
+    const closeHandler = () => {
+        onClose();
+        setTitle(value);
+    }
+
     return (
         <Modal visible={visible} animationType='slide' transparent={false}>
             <View style={styles.wrap}>
@@ -28,7 +33,7 @@ export const EditModal = ({visible, value, onClose, onSave}) => {
                 />
                 <View style={styles.buttons}>
                     <AppButton
-                        onPress={onClose}
+                        onPress={closeHandler}
                         color={THEME.DANGER_COLOR}
                     >
                         Отменить
