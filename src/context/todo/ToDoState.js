@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 
 import { todoReducer } from './todoReducer';
 import { TodoContext } from './todoContext';
-import { ADD_TODO, REMOVE_TODO, UPDATE_TODO } from '../types';
+import { ADD_TODO, CLEAR_ERROR, HIDE_LOADER, REMOVE_TODO, SHOW_ERROR, SHOW_LOADER, UPDATE_TODO } from '../types';
 import { ScreenContext } from '../screen/screenContext';
 
 export const TodoState = ({children}) => {
@@ -41,6 +41,12 @@ export const TodoState = ({children}) => {
     }
     const updateTodo = (id, title ) => dispatch({type: UPDATE_TODO, id, title});
 
+    const showLoader = () => dispatch({type: SHOW_LOADER});
+    const hideLoader = () => dispatch({type: HIDE_LOADER});
+    const showError = (error) => dispatch({type: SHOW_ERROR, error});
+    const clearError = () => dispatch({type: CLEAR_ERROR});
+
+    // В значение контекста value заносятся публичные функции, доступные извне
     return (
         <TodoContext.Provider
         value=
