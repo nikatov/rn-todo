@@ -5,7 +5,8 @@ import {
     REMOVE_TODO,
     SHOW_ERROR,
     SHOW_LOADER,
-    UPDATE_TODO
+    UPDATE_TODO,
+    FETCH_TODOS
 } from "../types";
 
 
@@ -33,7 +34,7 @@ const handlers = {
             return todo;
         })
     }),
-    [FETCH_TODOS]: (state, {todos}) => ({...state, todos })
+    [FETCH_TODOS]: (state, {todos}) => ({...state, todos }),
     [SHOW_LOADER]: state => ({...state, loading: true}),
     [HIDE_LOADER]: state => ({...state, loading: false}),
     [SHOW_ERROR]: (state, {error}) => ({...state, error}),

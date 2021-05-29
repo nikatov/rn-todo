@@ -16,7 +16,20 @@ export const TodoState = ({children}) => {
     const { changeScreen } = useContext(ScreenContext);
     const [state, dispatch] = useReducer(todoReducer, initialState);
 
-    const addTodo = title => dispatch({type: ADD_TODO, title});
+    const addTodo = async title => {
+        const response = await fetch(
+            'https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title })
+            });
+        // const data = await response.json();
+        const data = await response.json();
+        console.log(data);
+        dispatch({type: ADD_TODO, title});
+    }
+    
     const removeTodo = id => {
         const todo = state.todos.find(todo => todo.id === id);
         Alert.alert(
