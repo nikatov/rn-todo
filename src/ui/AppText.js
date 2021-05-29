@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet} from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 
 export const AppText = props => (
     <Text style={{...styles.default, ...props.style}}>

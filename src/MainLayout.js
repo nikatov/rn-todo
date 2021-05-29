@@ -1,11 +1,10 @@
-import React, { useContext, useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import React, { useContext } from 'react';
+import { View, StyleSheet } from 'react-native';
 
 import { MainScreen } from './screens/MainScreen';
 import { TodoScreen } from './screens/TodoScreen';
 import { Navbar } from './components/Navbar';
 import { THEME } from './theme';
-import { TodoContext } from './context/todo/todoContext';
 import { ScreenContext } from './context/screen/screenContext';
 
 export const MainLayout = () => {
