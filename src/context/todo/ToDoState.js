@@ -24,10 +24,9 @@ export const TodoState = ({children}) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title })
             });
-        // const data = await response.json();
         const data = await response.json();
         console.log(data);
-        dispatch({type: ADD_TODO, title});
+        dispatch({type: ADD_TODO, id: data.name, title});
     }
     
     const removeTodo = id => {
