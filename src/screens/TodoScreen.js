@@ -17,8 +17,9 @@ export const TodoScreen = () => {
     const {todoId, changeScreen} = useContext(ScreenContext);
     const todo = todos.find(todo => todo.id == todoId);
 
-    const saveHandler = title => {
-        updateTodo(todo.id, title);
+    // async - await, чтобы дождаться завершения асинхронной функции updateTodo (обновления на сервере), прежде чем закрывать модальное окно
+    const saveHandler = async title => {
+        await updateTodo(todo.id, title);
         setModel(false);
     }
 
