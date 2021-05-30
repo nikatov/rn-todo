@@ -3,15 +3,12 @@ import { Alert } from 'react-native';
 
 import { todoReducer } from './todoReducer';
 import { TodoContext } from './todoContext';
-import { ADD_TODO, CLEAR_ERROR, HIDE_LOADER, REMOVE_TODO, SHOW_ERROR, SHOW_LOADER, UPDATE_TODO } from '../types';
+import { ADD_TODO, CLEAR_ERROR, FETCH_TODOS, HIDE_LOADER, REMOVE_TODO, SHOW_ERROR, SHOW_LOADER, UPDATE_TODO } from '../types';
 import { ScreenContext } from '../screen/screenContext';
 
 export const TodoState = ({children}) => {
     const initialState = {
-        todos: [
-            {id: '1', title: 'Выучить React Native'},
-            {id: '2', title: 'Написать приложение'}
-        ]
+        todos: []
     }
     const { changeScreen } = useContext(ScreenContext);
     const [state, dispatch] = useReducer(todoReducer, initialState);
@@ -25,7 +22,7 @@ export const TodoState = ({children}) => {
                 body: JSON.stringify({ title })
             });
         const data = await response.json();
-        console.log(data);
+        // console.log('Добавление todo:', data);
         dispatch({type: ADD_TODO, id: data.name, title});
     }
     
@@ -51,6 +48,20 @@ export const TodoState = ({children}) => {
             { cancelable: false }
         );
     }
+
+    const fetchTodos = async () => {
+        const response = await fetch(
+            'https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
+            {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            });
+        const data = await response.json();
+        console.log('fetch data', data);
+        const todos = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
+        dispatch({type: FETCH_TODOS, todos});
+    }
+
     const updateTodo = (id, title ) => dispatch({type: UPDATE_TODO, id, title});
 
     const showLoader = () => dispatch({type: SHOW_LOADER});
@@ -64,9 +75,12 @@ export const TodoState = ({children}) => {
         value=
             {{
                 todos: state.todos,
+                loading: state.loading,
+                error: state.error,
                 addTodo,
                 removeTodo,
-                updateTodo
+                updateTodo,
+                fetchTodos
             }}
         >
             {children}

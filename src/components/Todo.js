@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { AppText } from '../ui/AppText';
 
 export function Todo({todo, onOpen, onRemove}) {
-    console.log(todo);
+    // console.log('отрисовка todo:', todo);
     return (
         <TouchableOpacity
             activeOpacity={0.5}
