@@ -50,6 +50,7 @@ export const TodoState = ({children}) => {
     }
 
     const fetchTodos = async () => {
+        showLoader();
         const response = await fetch(
             'https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
             {
@@ -57,9 +58,10 @@ export const TodoState = ({children}) => {
                 headers: {'Content-Type': 'application/json'}
             });
         const data = await response.json();
-        console.log('fetch data', data);
+        // console.log('fetch data', data);
         const todos = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
         dispatch({type: FETCH_TODOS, todos});
+        hideLoader();
     }
 
     const updateTodo = (id, title ) => dispatch({type: UPDATE_TODO, id, title});
