@@ -5,6 +5,7 @@ import { todoReducer } from './todoReducer';
 import { TodoContext } from './todoContext';
 import { ADD_TODO, CLEAR_ERROR, FETCH_TODOS, HIDE_LOADER, REMOVE_TODO, SHOW_ERROR, SHOW_LOADER, UPDATE_TODO } from '../types';
 import { ScreenContext } from '../screen/screenContext';
+import { Http } from '../../http';
 
 export const TodoState = ({children}) => {
     const initialState = {
@@ -14,16 +15,12 @@ export const TodoState = ({children}) => {
     const [state, dispatch] = useReducer(todoReducer, initialState);
 
     const addTodo = async title => {
-        const response = await fetch(
-            'https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title })
-            });
-        const data = await response.json();
-        // console.log('Добавление todo:', data);
-        dispatch({type: ADD_TODO, id: data.name, title});
+        try {
+            const data = await Http.post('https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos.json', { title });
+            dispatch({type: ADD_TODO, id: data.name, title});
+        } catch(e) {
+            showError('Что-то пошло не так... :(');
+        }
     }
     
     const removeTodo = id => {
@@ -39,9 +36,15 @@ export const TodoState = ({children}) => {
                 {
                     text: 'Удалить',
                     style: 'destructive',
-                    onPress: () => {
+                    onPress: async () => {
                         changeScreen(null); // выход из экрана Todo
-                        dispatch({type: REMOVE_TODO, id});
+                        try {
+                            await Http.delete(`https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`);
+                            dispatch({type: REMOVE_TODO, id});
+                        } catch(e) {
+                            showError('Что-то пошло не так... :(');
+                        }
+                        
                     }
                 }
             ],
@@ -52,20 +55,14 @@ export const TodoState = ({children}) => {
     const fetchTodos = async () => {
         showLoader();
         clearError();
+
         try {
-            const response = await fetch(
-                'https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
-                {
-                    method: 'GET',
-                    headers: {'Content-Type': 'application/json'}
-                });
-            const data = await response.json();
-            // console.log('fetch data', data);
+            const data = await Http.get('https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos.json');
+            console.log('fetch data', data);
             const todos = data ? Object.keys(data).map(key => ({...data[key], id: key})) : [];
             dispatch({type: FETCH_TODOS, todos});
         } catch (e) {
             showError('Что-то пошло не так... :(');
-            console.log(e);
         } finally {
             hideLoader();
         }
@@ -74,19 +71,11 @@ export const TodoState = ({children}) => {
     const updateTodo = async (id, title ) => {
         clearError();
         try {
-            await fetch(
-                `https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`,
-                {
-                    method: 'PATCH',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({title})
-                });
-        
+            await Http.patch(`https://rn-todo-app-4c17a-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`, {title})
+            dispatch({type: UPDATE_TODO, id, title})
         } catch (e) {
             showError('Что-то пошло не так... :(');
-            console.log(e);
-        } 
-        dispatch({type: UPDATE_TODO, id, title})
+        }
     }
 
     const showLoader = () => dispatch({type: SHOW_LOADER});
